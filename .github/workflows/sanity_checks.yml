@@ -19,5 +19,5 @@ jobs:
           VALIDATE_PYTHON_BLACK: false
           VALIDATE_PYTHON_PYLINT: false
           VALIDATE_HTML: false
-          DEFAULT_BRANCH: staging
+          DEFAULT_BRANCH: master
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
