@@ -1,4 +1,4 @@
-from users import views
+from trendico import views
 from django.urls import path
 
 urlpatterns = [

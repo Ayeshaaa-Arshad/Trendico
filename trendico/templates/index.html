@@ -16,7 +16,7 @@
 							</div>
 							<div class="shop-body">
 								<h3>Laptop<br>Collection</h3>
-								<a href="#" class="cta-btn">Shop now <i class="fa fa-arrow-circle-right"></i></a>
+								<a href="{% url 'product'%}" class="cta-btn">Shop now <i class="fa fa-arrow-circle-right"></i></a>
 							</div>
 						</div>
 					</div>
@@ -30,7 +30,7 @@
 							</div>
 							<div class="shop-body">
 								<h3>Accessories<br>Collection</h3>
-								<a href="#" class="cta-btn">Shop now <i class="fa fa-arrow-circle-right"></i></a>
+								<a href="{% url 'product'%}" class="cta-btn">Shop now <i class="fa fa-arrow-circle-right"></i></a>
 							</div>
 						</div>
 					</div>
@@ -44,7 +44,7 @@
 							</div>
 							<div class="shop-body">
 								<h3>Cameras<br>Collection</h3>
-								<a href="#" class="cta-btn">Shop now <i class="fa fa-arrow-circle-right"></i></a>
+								<a href="{% url 'product'%}" class="cta-btn">Shop now <i class="fa fa-arrow-circle-right"></i></a>
 							</div>
 						</div>
 					</div>
@@ -89,7 +89,7 @@
 										<!-- product -->
 										<div class="product">
 											<div class="product-img">
-												<img src="./static/img/product01.png" alt="">
+												<img src="{%static 'img/product01.png'%}" alt="">
 												<div class="product-label">
 													<span class="sale">-30%</span>
 													<span class="new">NEW</span>
@@ -121,7 +121,7 @@
 										<!-- product -->
 										<div class="product">
 											<div class="product-img">
-												<img src="./static/img/product02.png" alt="">
+												<img src="{% static 'img/product02.png'%}" alt="">
 												<div class="product-label">
 													<span class="new">NEW</span>
 												</div>
@@ -153,7 +153,7 @@
 										<!-- product -->
 										<div class="product">
 											<div class="product-img">
-												<img src="./static/img/product03.png" alt="">
+												<img src="{% static 'img/product03.png'%}" alt="">
 												<div class="product-label">
 													<span class="sale">-30%</span>
 												</div>
@@ -179,7 +179,7 @@
 										<!-- product -->
 										<div class="product">
 											<div class="product-img">
-												<img src="./static/img/product04.png" alt="">
+												<img src="{% static 'img/product04.png'%}" alt="">
 											</div>
 											<div class="product-body">
 												<p class="product-category">Category</p>
@@ -207,7 +207,7 @@
 										<!-- product -->
 										<div class="product">
 											<div class="product-img">
-												<img src="./static/img/product05.png" alt="">
+												<img src="{% static 'img/product05.png'%}" alt="">
 											</div>
 											<div class="product-body">
 												<p class="product-category">Category</p>
@@ -325,7 +325,7 @@
 										<!-- product -->
 										<div class="product">
 											<div class="product-img">
-												<img src="./static/img/product06.png" alt="">
+												<img src="{% static 'img/product06.png'%}" alt="">
 												<div class="product-label">
 													<span class="sale">-30%</span>
 													<span class="new">NEW</span>
@@ -357,7 +357,7 @@
 										<!-- product -->
 										<div class="product">
 											<div class="product-img">
-												<img src="./static/img/product07.png" alt="">
+												<img src="{% static 'img/product07.png'%}" alt="">
 												<div class="product-label">
 													<span class="new">NEW</span>
 												</div>
@@ -388,7 +388,7 @@
 										<!-- product -->
 										<div class="product">
 											<div class="product-img">
-												<img src="./static/img/product08.png" alt="">
+												<img src="{% static 'img/product08.png'%}" alt="">
 												<div class="product-label">
 													<span class="sale">-30%</span>
 												</div>
@@ -414,7 +414,7 @@
 										<!-- product -->
 										<div class="product">
 											<div class="product-img">
-												<img src="./static/img/product09.png" alt="">
+												<img src="{% static 'img/product09.png'%}" alt="">
 											</div>
 											<div class="product-body">
 												<p class="product-category">Category</p>
@@ -442,7 +442,7 @@
 										<!-- product -->
 										<div class="product">
 											<div class="product-img">
-												<img src="./static/img/product01.png" alt="">
+												<img src="{% static 'img/product01.png'%}" alt="">
 											</div>
 											<div class="product-body">
 												<p class="product-category">Category</p>
@@ -462,7 +462,7 @@
 												</div>
 											</div>
 											<div class="add-to-cart">
-												<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
+												<a href="{%url 'product'%}"></a><button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button></a>
 											</div>
 										</div>
 										<!-- /product -->
@@ -500,7 +500,7 @@
 								<!-- product widget -->
 								<div class="product-widget">
 									<div class="product-img">
-										<img src="./static/img/product07.png" alt="">
+										<img src="{% static 'img/product07.png'%}" alt="">
 									</div>
 									<div class="product-body">
 										<p class="product-category">Category</p>
@@ -513,7 +513,7 @@
 								<!-- product widget -->
 								<div class="product-widget">
 									<div class="product-img">
-										<img src="./static/img/product08.png" alt="">
+										<img src="{% static 'img/product08.png'%}" alt="">
 									</div>
 									<div class="product-body">
 										<p class="product-category">Category</p>
@@ -526,7 +526,7 @@
 								<!-- product widget -->
 								<div class="product-widget">
 									<div class="product-img">
-										<img src="./static/img/product09.png" alt="">
+										<img src="{% static 'img/product09.png'%}" alt="">
 									</div>
 									<div class="product-body">
 										<p class="product-category">Category</p>
@@ -541,7 +541,7 @@
 								<!-- product widget -->
 								<div class="product-widget">
 									<div class="product-img">
-										<img src="./static/img/product01.png" alt="">
+										<img src="{% static 'img/product01.png'%}" alt="">
 									</div>
 									<div class="product-body">
 										<p class="product-category">Category</p>
@@ -554,7 +554,7 @@
 								<!-- product widget -->
 								<div class="product-widget">
 									<div class="product-img">
-										<img src="./static/img/product02.png" alt="">
+										<img src="{% static 'img/product02.png'%}" alt="">
 									</div>
 									<div class="product-body">
 										<p class="product-category">Category</p>
@@ -567,7 +567,7 @@
 								<!-- product widget -->
 								<div class="product-widget">
 									<div class="product-img">
-										<img src="./static/img/product03.png" alt="">
+										<img src="{% static 'img/product03.png'%}" alt="">
 									</div>
 									<div class="product-body">
 										<p class="product-category">Category</p>
@@ -593,7 +593,7 @@
 								<!-- product widget -->
 								<div class="product-widget">
 									<div class="product-img">
-										<img src="./static/img/product04.png" alt="">
+										<img src="{% static 'img/product04.png'%}" alt="">
 									</div>
 									<div class="product-body">
 										<p class="product-category">Category</p>
@@ -606,7 +606,7 @@
 								<!-- product widget -->
 								<div class="product-widget">
 									<div class="product-img">
-										<img src="./static/img/product05.png" alt="">
+										<img src="{% static 'img/product05.png'%}" alt="">
 									</div>
 									<div class="product-body">
 										<p class="product-category">Category</p>
@@ -619,7 +619,7 @@
 								<!-- product widget -->
 								<div class="product-widget">
 									<div class="product-img">
-										<img src="./static/img/product06.png" alt="">
+										<img src="{ % static 'img/product06.png'%}" alt="">
 									</div>
 									<div class="product-body">
 										<p class="product-category">Category</p>
@@ -634,7 +634,7 @@
 								<!-- product widget -->
 								<div class="product-widget">
 									<div class="product-img">
-										<img src="./static/img/product07.png" alt="">
+										<img src="{% static 'img/product07.png'%}" alt="">
 									</div>
 									<div class="product-body">
 										<p class="product-category">Category</p>
@@ -647,7 +647,7 @@
 								<!-- product widget -->
 								<div class="product-widget">
 									<div class="product-img">
-										<img src="./static/img/product08.png" alt="">
+										<img src="{% static 'img/product08.png'%}" alt="">
 									</div>
 									<div class="product-body">
 										<p class="product-category">Category</p>
@@ -660,7 +660,7 @@
 								<!-- product widget -->
 								<div class="product-widget">
 									<div class="product-img">
-										<img src="./static/img/product09.png" alt="">
+										<img src="{%static 'img/product09.png'%}" alt="">
 									</div>
 									<div class="product-body">
 										<p class="product-category">Category</p>
@@ -688,7 +688,7 @@
 								<!-- product widget -->
 								<div class="product-widget">
 									<div class="product-img">
-										<img src="./static/img/product01.png" alt="">
+										<img src="{% static 'img/product01.png'%}" alt="">
 									</div>
 									<div class="product-body">
 										<p class="product-category">Category</p>
@@ -701,7 +701,7 @@
 								<!-- product widget -->
 								<div class="product-widget">
 									<div class="product-img">
-										<img src="./static/img/product02.png" alt="">
+										<img src="{% static 'img/product02.png'%}" alt="">
 									</div>
 									<div class="product-body">
 										<p class="product-category">Category</p>
@@ -714,7 +714,7 @@
 								<!-- product widget -->
 								<div class="product-widget">
 									<div class="product-img">
-										<img src="./static/img/product03.png" alt="">
+										<img src="{% static 'img/product03.png'%}" alt="">
 									</div>
 									<div class="product-body">
 										<p class="product-category">Category</p>
@@ -729,7 +729,7 @@
 								<!-- product widget -->
 								<div class="product-widget">
 									<div class="product-img">
-										<img src="./static/img/product04.png" alt="">
+										<img src="{% static 'img/product04.png'%}" alt="">
 									</div>
 									<div class="product-body">
 										<p class="product-category">Category</p>
@@ -742,7 +742,7 @@
 								<!-- product widget -->
 								<div class="product-widget">
 									<div class="product-img">
-										<img src="./static/static/img/product05.png" alt="">
+										<img src="{% static 'img/product05.png'%}" alt="">
 									</div>
 									<div class="product-body">
 										<p class="product-category">Category</p>
@@ -755,7 +755,7 @@
 								<!-- product widget -->
 								<div class="product-widget">
 									<div class="product-img">
-										<img src="./static/img/product06.png" alt="">
+										<img src="{%static 'img/product06.png'%}" alt="">
 									</div>
 									<div class="product-body">
 										<p class="product-category">Category</p>
