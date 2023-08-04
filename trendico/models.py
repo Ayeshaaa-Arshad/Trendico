@@ -1,48 +1,69 @@
-from django.db import models
 from datetime import datetime, timedelta
-# Create your models here.
-CATEGORY_CHOICES = (
-    ('L', 'Laptop'),
-    ('T', 'Tab'),
-    ('C', 'Camera'),
-    ('H', 'Headphone')
-)
-class Product(models.Model):
-    product_name=models.CharField(max_length=50)
-    img_URL = models.ImageField(upload_to='images')
+from django.db import models
+
+class BaseModel(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    is_active = models.BooleanField(default=True)
+    class Meta:
+        abstract = True
+
+class ProductCategory(models.Model):
+    name = models.CharField(max_length=50)
+    description = models.TextField()
+
+    def __str__(self):
+        return self.name
+
+class Product(BaseModel):
+    name = models.CharField(max_length=50)
     price = models.FloatField()
     discount_price = models.FloatField(blank=True, null=True)
-    category = models.CharField(choices=CATEGORY_CHOICES, max_length=1)
+    category = models.ForeignKey(ProductCategory, on_delete=models.CASCADE)
     description = models.TextField()
-    total_quantity=models.PositiveIntegerField()
-    created_at=models.DateTimeField(auto_now_add=True)
+    initial_quantity = models.PositiveIntegerField()
+
     def __str__(self):
-        return(f"{self.product_name} {self.price}")
+        return self.name
+
+    @property
+    def is_new(self):
+        created_at_naive = self.created_at.replace(tzinfo=None)
+        time_difference = datetime.now() - created_at_naive
+        return time_difference < timedelta(days=15)
+
+    @property
+    def discount_percentage(self):
+        if self.price is None or self.discount_price is None:
+            return 0
+        elif self.price <= 0 or self.discount_price <= 0:
+            return 0
+        else:
+            discount_amount = self.price - self.discount_price
+            return (discount_amount / self.price) * 100
 
     @classmethod
-    def is_new(cls,products):
-        for product in products:
-            created_at_naive = product.created_at.replace(tzinfo=None)
-            time_difference = datetime.now() - created_at_naive
-            product.isNew = time_difference < timedelta(days=15)
+    def get_specific_products(cls, category):
+        if category.lower() == 'all':
+            return cls.objects.all()
 
-    @classmethod
-    def calculate_discount_percentage(cls,products):
-        for product in products:
-            if product.price is None or product.discount_price is None:
-                product.discount_percentage = 0
-            elif product.price <= 0 or product.discount_price <= 0:
-                product.discount_percentage = 0
-            else:
-                discount_amount = product.price - product.discount_price
-                product.discount_percentage = (discount_amount / product.price) * 100
+        selected_category = ProductCategory.objects.filter(name__iexact=category).first()
+        if selected_category:
+            return cls.objects.filter(category=selected_category)
 
-class TopSellingProduct(models.Model):
-    product = models.ForeignKey('Product', on_delete=models.CASCADE)
-    total_sales_quantity = models.PositiveIntegerField()
-    total_revenue = models.DecimalField(max_digits=10, decimal_places=2)
-    profit_margin = models.DecimalField(max_digits=5, decimal_places=2)
-    customer_ratings = models.DecimalField(max_digits=3, decimal_places=2)
-    promotional_success = models.BooleanField()
-    market_trends = models.BooleanField()
-    last_updated = models.DateTimeField(auto_now=True)
+        return cls.objects.none()
+
+class ProductImage(BaseModel):
+    product = models.ForeignKey(Product, related_name='images', on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='images')
+    def __str__(self):
+        return f"Image for {self.product.name}"
+
+class Stock(models.Model):
+    product = models.ForeignKey('Product',related_name='stock', on_delete=models.CASCADE)
+    quantity = models.IntegerField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+    event_type = models.CharField(max_length=20)
+
+    def __str__(self):
+        return f"{self.product.name} - {self.event_type} - {self.timestamp}"

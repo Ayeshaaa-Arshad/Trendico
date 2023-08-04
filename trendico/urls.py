@@ -1,9 +1,9 @@
-from trendico import views
 from django.urls import path
+from trendico import views
 
 urlpatterns = [
     path('',views.HomeView.as_view(),name='home'),
-    path('store/',views.store,name='store'),
+    path('store/<str:name>',views.StoreView.as_view(),name='store'),
     path('product/',views.product,name='product'),
     path('checkout/',views.checkout,name='checkout'),
     path('login/',views.LoginView.as_view(),name='login'),

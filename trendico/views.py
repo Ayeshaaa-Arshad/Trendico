@@ -1,10 +1,10 @@
 from django.shortcuts import render,redirect
 from django.contrib.auth import authenticate,login,logout
 from django.contrib import messages
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
+from django.core.paginator import Paginator
+from django.db.models import Sum
 from trendico.models import Product
-from django.contrib.auth.forms import UserCreationForm
 from trendico.forms import SignUpForm
 
 
@@ -13,12 +13,28 @@ from trendico.forms import SignUpForm
 class HomeView(View):
     def get(self,request):
         products=Product.objects.all()
-        Product.is_new(products)
-        Product.calculate_discount_percentage(products)
+        products = Product.objects.annotate(
+            remaining_quantity=Sum('stock__quantity')
+        )
         return render(request,'index.html',{'Products':products})
 
-def store(request):
-    return render(request,'store.html')
+class StoreView(View):
+    template_name = 'store.html'
+
+    def get(self, request, name):
+        products = Product.get_specific_products(name)
+
+        if products:
+            products = products.annotate(
+                remaining_quantity=Sum('stock__quantity')
+            )
+            request.session['selected_category'] = name
+            paginator = Paginator(products, 6)
+            page_number = request.GET.get('page')
+            page_obj = paginator.get_page(page_number)
+            return render(request, self.template_name, {'page_obj': page_obj})
+        messages.success(request, "No Product Available")
+        return redirect('home')
 
 def product(request):
     return render(request,'product.html')
@@ -37,14 +53,13 @@ class LoginView(View):
             login(request, user)
             messages.success(request, "Successfully logged In")
             return redirect('home')
-        else:
-            messages.success(request, "Failed to log In")
-            return redirect('login')
+        messages.success(request, "Failed to log In")
+        return redirect('login')
 
 class LogoutView(View):
-    def get(self,request):
+    def get(self, request):
         logout(request)
-        messages.success(request,"Logged out")
+        messages.success(request, "Logged out")
         return redirect('home')
 
 class RegisterView(View):
@@ -59,8 +74,7 @@ class RegisterView(View):
             login(request, user)
             messages.success(request, "Successfully Registered")
             return redirect('home')
-        else:
-            return render(request, self.template_name, {'form': form})
+        return render(request, self.template_name, {'form': form})
 
     def get(self, request):
         form = SignUpForm()
