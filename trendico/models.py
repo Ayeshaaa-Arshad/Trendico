@@ -40,7 +40,8 @@ class Product(BaseModel):
             return 0
         else:
             discount_amount = self.price - self.discount_price
-            return (discount_amount / self.price) * 100
+            discount_percentage = round((discount_amount / self.price) * 100)
+            return discount_percentage
 
     @classmethod
     def get_specific_products(cls, category):
@@ -60,7 +61,7 @@ class ProductImage(BaseModel):
         return f"Image for {self.product.name}"
 
 class Stock(models.Model):
-    product = models.ForeignKey('Product',related_name='stock', on_delete=models.CASCADE)
+    product = models.ForeignKey(Product,related_name='stocks', on_delete=models.CASCADE)
     quantity = models.IntegerField()
     timestamp = models.DateTimeField(auto_now_add=True)
     event_type = models.CharField(max_length=20)

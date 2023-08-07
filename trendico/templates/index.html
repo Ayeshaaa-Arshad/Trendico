@@ -67,33 +67,41 @@
         <!-- row -->
         <div class="row">
 
-            <!-- section title -->
-            <div class="col-md-12">
-                <div class="section-title">
-                    <h3 class="title">New Products</h3>
-                    <div class="section-nav">
-                        <ul class="section-tab-nav tab-nav">
-                            <li class="active"><a data-toggle="tab" href="#tab1">Laptops</a></li>
-                            <li><a data-toggle="tab" href="#tab1">Smartphones</a></li>
-                            <li><a data-toggle="tab" href="#tab1">Cameras</a></li>
-                            <li><a data-toggle="tab" href="#tab1">Accessories</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <!-- /section title -->
 
+    <!-- section title -->
+    <div class="col-md-12">
+        <div class="section-title">
+            <h3 class="title">New Products</h3>
+            <div class="section-nav">
+                <ul class="section-tab-nav tab-nav" id="category-tabs">
+                <li {% if not selected_category %}class="active"{% endif %}>
+                    <a href="{% url 'home' %}" class="category-link" data-category="all">All</a>
+                </li>
+                  {% for category in categories %}
+                        <li {% if selected_category == category.name %}class="active"{% endif %}>
+                            <a href="#" class="category-link" data-category="{{ category.name }}">
+                                {{ category.name }}
+                            </a>
+                        </li>
+                 {% endfor %}
+            </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /section title -->
             <!-- Products tab & slick -->
             <div class="col-md-12">
                 <div class="row">
                     <div class="products-tabs">
                         <!-- tab -->
                         <div id="tab1" class="tab-pane active">
-                            <div class="products-slick" data-nav="#slick-nav-1">
+                            <div class="products-slick" data-nav="#slick-nav-1" id="product-list">
                                 <!-- product -->
                                 {%for product in Products%}
-                                       {% if product.remaining_quantity > 0 %}
-                                <div class="product">
+                                {% if product.remaining_quantity > 0 %}
+                                {% if product.is_new %}
+
+                               <div class="product product-template">
                                     <div class="product-img">
                                         <img src="{{product.images.first.image.url}}" alt="">
                                         <div class="product-label">
@@ -140,9 +148,11 @@
                                 </div>
                                 <!-- /product -->
                                 {%endif%}
-                               {%endfor%}
+                                {%endif%}
+                                {%endfor%}
                             </div>
                             <div id="slick-nav-1" class="products-slick-nav"></div>
+                           </div>
                         </div>
                         <!-- /tab -->
                     </div>
@@ -235,7 +245,7 @@
                                 <!-- product -->
                                 <div class="product">
                                     <div class="product-img">
-                                        <img src="{% static 'img/product06.png'%}" alt="">
+                                        <img src="{% static 'img/product06.png' %}" alt="">
                                         <div class="product-label">
                                             <span class="sale">-30%</span>
                                             <span class="new">NEW</span>
@@ -589,7 +599,7 @@
                         <!-- product widget -->
                         <div class="product-widget">
                             <div class="product-img">
-                                <img src="{ % static 'img/product06.png'%}" alt="">
+                                <img src="{ % static 'img/product06.png' %}" alt="">
                             </div>
                             <div class="product-body">
                                 <p class="product-category">Category</p>
@@ -743,7 +753,7 @@
                         <!-- product widget -->
                         <div class="product-widget">
                             <div class="product-img">
-                                <img src="{%static 'img/product06.png'%}" alt="">
+                                <img src="{%static 'img/product06.png' %}" alt="">
                             </div>
                             <div class="product-body">
                                 <p class="product-category">Category</p>
