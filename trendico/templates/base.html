@@ -5,12 +5,12 @@
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		 <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
 		<title>Trendico</title>
 
  		<!-- Google font -->
  		<link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,700" rel="stylesheet">
+		<link href="{% static 'bootstrap.min.css'%}" rel="stylesheet">
 
  		<!-- Bootstrap -->
  		<link type="text/css" rel="stylesheet" href="{%static 'css/bootstrap.min.css'%}"/>
@@ -28,12 +28,7 @@
  		<!-- Custom stlylesheet -->
  		<link type="text/css" rel="stylesheet" href="{%static 'css/style.css'%}"/>
 
- 		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
- 		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
- 		<!--[if lt IE 9]>
- 		  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
- 		  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
- 		<![endif]-->
+
 
     </head>
 	<body>
@@ -47,14 +42,19 @@
 						<li><a href="#"><i class="fa fa-envelope-o"></i> email@email.com</a></li>
 						<li><a href="#"><i class="fa fa-map-marker"></i> 1734 Stonecoal Road</a></li>
 					</ul>
-					<ul class="header-links pull-right">
 
+					{%if user.is_authenticated%}
+					<ul class="header-links pull-right">
+						<li><a href="{%url 'logout'%}"><i class="fa fa-user-o"></i> Logout</a></li>
+					</ul>
+					{%else%}
+					<ul class="header-links pull-right">
 						<li><a href="{%url 'login'%}"><i class="fa fa-user-o"></i> Login-SignUp</a></li>
 					</ul>
+					{%endif%}
 				</div>
 			</div>
 			<!-- /TOP HEADER -->
-
 			<!-- MAIN HEADER -->
 			<div id="header">
 				<!-- container -->
@@ -87,7 +87,7 @@
 							</div>
 						</div>
 						<!-- /SEARCH BAR -->
-
+					{%if user.is_authenticated%}
 						<!-- ACCOUNT -->
 						<div class="col-md-3 clearfix">
 							<div class="header-ctn">
@@ -143,14 +143,9 @@
 									</div>
 								</div>
 								<!-- /Cart -->
-
+							{%endif%}
 								<!-- Menu Toogle -->
-								<div class="menu-toggle">
-									<a href="#">
-										<i class="fa fa-bars"></i>
-										<span>Menu</span>
-									</a>
-								</div>
+
 								<!-- /Menu Toogle -->
 							</div>
 						</div>
@@ -172,14 +167,13 @@
 				<div id="responsive-nav">
 					<!-- NAV -->
 					<ul class="main-nav nav navbar-nav">
-						<li class="active"><a href="{% url 'home'%}">Home</a></li>
-<!--						<li><a href="#">Hot Deals</a></li>-->
-						<li><a href="{%url 'store'%}">Laptops</a></li>
-						<li><a href="{%url 'store'%}">Smartphones</a></li>
-						<li><a href="{%url 'store'%}">Cameras</a></li>
-						<li><a href="{%url 'store'%}">Accessories</a></li>
-
+						<li {% if request.resolver_match.url_name == 'home' %}class="active"{% endif %}><a href="{% url 'home'%}">Home</a></li>
+						<li {% if request.resolver_match.url_name == 'store' and request.resolver_match.kwargs.name == 'Laptop' %}class="active"{% endif %}><a href="{% url 'store' 'Laptop'%}">Laptops</a></li>
+						<li {% if request.resolver_match.url_name == 'store' and request.resolver_match.kwargs.name == 'Tab' %}class="active"{% endif %}><a href="{% url 'store' 'Tab'%}">Tabs</a></li>
+						<li {% if request.resolver_match.url_name == 'store' and request.resolver_match.kwargs.name == 'Camera' %}class="active"{% endif %}><a href="{% url 'store' 'Camera'%}">Cameras</a></li>
+						<li {% if request.resolver_match.url_name == 'store' and request.resolver_match.kwargs.name == 'all' %}class="active"{% endif %}><a href="{% url 'store' 'all'%}">Accessories</a></li>
 					</ul>
+
 					<!-- /NAV -->
 				</div>
 				<!-- /responsive-nav -->
@@ -193,8 +187,17 @@
 			<!-- container -->
 			<div class="container">
 				<!-- row -->
+
 				<div class="row">
 				</div>
+				{% if messages%}
+					{% for message in messages%}
+					   <div class="alert alert-warning alert-dismissible fade show" role="alert">
+									 {{message}}
+						   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+					   </div>
+				   {%endfor%}
+				{%endif%}
 				<!-- /row -->
 				{%block content%}
 				{%endblock%}
@@ -326,8 +329,6 @@
 								Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved
 							<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
 							</span>
-
-
 						</div>
 					</div>
 						<!-- /row -->
@@ -337,7 +338,6 @@
 			<!-- /bottom footer -->
 		</footer>
 		<!-- /FOOTER -->
-
 		<!-- jQuery Plugins -->
 		<script src="{%static 'js/jquery.min.js'%}"></script>
 		<script src="{%static 'js/bootstrap.min.js'%}"></script>
@@ -345,5 +345,13 @@
 		<script src="{%static 'js/nouislider.min.js'%}"></script>
 		<script src="{%static 'js/jquery.zoom.min.js'%}"></script>
 		<script src="{%static 'js/main.js'%}"></script>
+		<script src="{%static 'jquery.min.js'%}"></script>
+		<script src="{% static 'bootstrap.min.js'%}"></script>
+		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+ 		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+ 		<!--[if lt IE 9]>
+ 		  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+ 		  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+ 		<![endif]-->
 	</body>
 </html>
