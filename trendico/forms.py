@@ -1,13 +1,17 @@
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django import forms
+
+
 class SignUpForm(UserCreationForm):
-    email=forms.EmailField(label="",widget=forms.TextInput(attrs={'class':'form-control','placeholder':'Email'}))
-    full_name=forms.CharField(label="",max_length="30",widget=forms.TextInput(attrs={'class':'form-control','placeholder':'Full Name'}))
+    email = forms.EmailField(label="", widget=forms.TextInput(
+        attrs={'class': 'form-control', 'placeholder': 'Email'}))
+    full_name = forms.CharField(label="", max_length="30", widget=forms.TextInput(
+        attrs={'class': 'form-control', 'placeholder': 'Full Name'}))
 
     class Meta:
-        model=User
-        fields=('username','full_name','email','password1','password2')
+        model = User
+        fields = ('username', 'full_name', 'email', 'password1', 'password2')
 
     def __init__(self, *args, **kwargs):
         super(SignUpForm, self).__init__(*args, **kwargs)

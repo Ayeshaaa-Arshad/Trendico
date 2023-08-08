@@ -1,6 +1,6 @@
 {%load static%}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 	<head>
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -10,10 +10,7 @@
 
  		<!-- Google font -->
  		<link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,700" rel="stylesheet">
-		<link href="{% static 'bootstrap.min.css'%}" rel="stylesheet">
-
- 		<!-- Bootstrap -->
- 		<link type="text/css" rel="stylesheet" href="{%static 'css/bootstrap.min.css'%}"/>
+		<link href="{% static 'css/bootstrap.min.css'%}" rel="stylesheet">
 
  		<!-- Slick -->
  		<link type="text/css" rel="stylesheet" href="{%static 'css/slick.css'%}"/>
@@ -27,8 +24,6 @@
 
  		<!-- Custom stlylesheet -->
  		<link type="text/css" rel="stylesheet" href="{%static 'css/style.css'%}"/>
-
-
 
     </head>
 	<body>
@@ -170,6 +165,8 @@
 						<li {% if request.resolver_match.url_name == 'home' %}class="active"{% endif %}><a href="{% url 'home'%}">Home</a></li>
 						<li {% if request.resolver_match.url_name == 'store' and request.resolver_match.kwargs.name == 'Laptop' %}class="active"{% endif %}><a href="{% url 'store' 'Laptop'%}">Laptops</a></li>
 						<li {% if request.resolver_match.url_name == 'store' and request.resolver_match.kwargs.name == 'Tab' %}class="active"{% endif %}><a href="{% url 'store' 'Tab'%}">Tabs</a></li>
+						<li {% if request.resolver_match.url_name == 'store' and request.resolver_match.kwargs.name == 'Headphones' %}class="active"{% endif %}><a href="{% url 'store' 'Headphones'%}">Headphones</a></li>
+						<li {% if request.resolver_match.url_name == 'store' and request.resolver_match.kwargs.name == 'Smartphone' %}class="active"{% endif %}><a href="{% url 'store' 'Smartphone'%}">Smartphones</a></li>
 						<li {% if request.resolver_match.url_name == 'store' and request.resolver_match.kwargs.name == 'Camera' %}class="active"{% endif %}><a href="{% url 'store' 'Camera'%}">Cameras</a></li>
 						<li {% if request.resolver_match.url_name == 'store' and request.resolver_match.kwargs.name == 'all' %}class="active"{% endif %}><a href="{% url 'store' 'all'%}">Accessories</a></li>
 					</ul>
@@ -325,9 +322,7 @@
 								<li><a href="#"><i class="fa fa-cc-amex"></i></a></li>
 							</ul>
 							<span class="copyright">
-								<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
 								Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved
-							<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
 							</span>
 						</div>
 					</div>
@@ -345,8 +340,8 @@
 		<script src="{%static 'js/nouislider.min.js'%}"></script>
 		<script src="{%static 'js/jquery.zoom.min.js'%}"></script>
 		<script src="{%static 'js/main.js'%}"></script>
-		<script src="{%static 'jquery.min.js'%}"></script>
-		<script src="{% static 'bootstrap.min.js'%}"></script>
+		<script src="{%static 'js/dynamic-list.js'%}"></script>
+
 		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
  		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
  		<!--[if lt IE 9]>
