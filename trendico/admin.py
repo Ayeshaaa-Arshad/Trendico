@@ -1,5 +1,5 @@
 from django.contrib import admin
-from trendico.models import Product,ProductImage,ProductCategory,Stock,TopSellingProduct,UserReview
+from trendico.models import Product, ProductImage, ProductCategory, Stock, TopSellingProduct, UserReview
 # Register your models here.
 
 admin.site.register(Product)

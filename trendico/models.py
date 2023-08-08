@@ -140,3 +140,6 @@ def update_top_selling_product_stats(sender, instance, **kwargs):
         if instance.product.is_top_seller:
             top_selling_product.is_top_seller = True
             top_selling_product.save()
+
+
+

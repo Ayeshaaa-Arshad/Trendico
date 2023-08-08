@@ -20,15 +20,20 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='TopSellingProduct',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
                 ('total_sales_quantity', models.PositiveIntegerField()),
-                ('total_revenue', models.DecimalField(decimal_places=2, max_digits=10)),
-                ('profit_margin', models.DecimalField(decimal_places=2, max_digits=5)),
-                ('customer_ratings', models.DecimalField(decimal_places=2, max_digits=3)),
+                ('total_revenue', models.DecimalField(
+                    decimal_places=2, max_digits=10)),
+                ('profit_margin', models.DecimalField(
+                    decimal_places=2, max_digits=5)),
+                ('customer_ratings', models.DecimalField(
+                    decimal_places=2, max_digits=3)),
                 ('promotional_success', models.BooleanField()),
                 ('market_trends', models.BooleanField()),
                 ('last_updated', models.DateTimeField(auto_now=True)),
-                ('product', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='trendico.product')),
+                ('product', models.ForeignKey(
+                    on_delete=django.db.models.deletion.CASCADE, to='trendico.product')),
             ],
         ),
     ]
