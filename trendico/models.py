@@ -54,15 +54,15 @@ class Product(BaseModel):
 
     @property
     def average_rating(self):
-        if self.reviews.exists():
-            return self.reviews.aggregate(models.Avg('star_rating'))['star_rating__avg']
+        if self.user_reviews.exists():
+            return self.user_reviews.aggregate(models.Avg('star_rating'))['star_rating__avg']
         return 0
 
     @property
     def is_top_seller(self):
         try:
             top_selling_product = TopSellingProduct.objects.get(product=self)
-            return top_selling_product.sales_count >= 50 and self.average_rating >= 4.5
+            return top_selling_product.sales_count >= 5 and self.average_rating >= 3
         except TopSellingProduct.DoesNotExist:
             return False
 
