@@ -14,6 +14,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='stock',
             name='product',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='stocks', to='trendico.product'),
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, related_name='stocks', to='trendico.product'),
         ),
     ]

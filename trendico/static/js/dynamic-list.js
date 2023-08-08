@@ -62,9 +62,9 @@ $(document).ready(function() {
             productHtml += productTemplate;
         });
 
-        productListContainer.slick('unslick'); // Unslick the slider before updating content
+        productListContainer.slick('unslick');
         productListContainer.empty().append(productHtml);
-        productListContainer.slick(slickOptions); // Reinitialize the slider
+        productListContainer.slick(slickOptions);
 
         var slickControls = productListContainer.find('.slick-prev, .slick-next');
         var prevArrow = productListContainer.find('.slick-prev');
