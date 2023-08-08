@@ -14,13 +14,16 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Product',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
                 ('product_name', models.CharField(max_length=50)),
                 ('img_URL', models.ImageField(upload_to='images')),
                 ('price', models.FloatField()),
                 ('discount_price', models.FloatField(blank=True, null=True)),
-                ('category', models.CharField(choices=[('L', 'Laptop'), ('T', 'Tab'), ('C', 'Camera'), ('H', 'Headphone')], max_length=1)),
-                ('label', models.CharField(choices=[('P', 'primary'), ('S', 'secondary'), ('D', 'danger')], max_length=1)),
+                ('category', models.CharField(choices=[
+                 ('L', 'Laptop'), ('T', 'Tab'), ('C', 'Camera'), ('H', 'Headphone')], max_length=1)),
+                ('label', models.CharField(choices=[
+                 ('P', 'primary'), ('S', 'secondary'), ('D', 'danger')], max_length=1)),
                 ('description', models.TextField()),
             ],
         ),

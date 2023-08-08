@@ -1,14 +1,15 @@
-from django.shortcuts import render,redirect
-from django.contrib.auth import authenticate,login,logout
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.views import View
 from django.core.paginator import Paginator
 from django.db.models import Sum
-from trendico.models import Product,ProductCategory
+from trendico.models import Product, ProductCategory
 from trendico.forms import SignUpForm
 from django.http import JsonResponse
 import json
 # Create your views here.
+
 
 class HomeView(View):
     def get(self, request, category=None):
@@ -27,6 +28,7 @@ class HomeView(View):
             'selected_category': category
         }
         return render(request, 'index.html', context)
+
 
 class ProductsByCategoryView(View):
     def get(self, request, category):
@@ -52,6 +54,7 @@ class ProductsByCategoryView(View):
 
         return JsonResponse(products_data, safe=False)
 
+
 class StoreView(View):
     template_name = 'store.html'
 
@@ -70,16 +73,20 @@ class StoreView(View):
         messages.success(request, "No Product Available")
         return redirect('home')
 
+
 def product(request):
-    return render(request,'product.html')
+    return render(request, 'product.html')
+
 
 def checkout(request):
-    return render(request,'checkout.html')
+    return render(request, 'checkout.html')
+
 
 class LoginView(View):
-    def get(self,request):
-        return render(request,'login.html')
-    def post(self,request):
+    def get(self, request):
+        return render(request, 'login.html')
+
+    def post(self, request):
         username = request.POST['username']
         password = request.POST['password']
         user = authenticate(request, username=username, password=password)
@@ -90,14 +97,17 @@ class LoginView(View):
         messages.success(request, "Failed to log In")
         return redirect('login')
 
+
 class LogoutView(View):
     def get(self, request):
         logout(request)
         messages.success(request, "Logged out")
         return redirect('home')
 
+
 class RegisterView(View):
     template_name = 'login.html'
+
     def post(self, request):
         form = SignUpForm(request.POST)
         if form.is_valid():

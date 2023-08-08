@@ -18,14 +18,18 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='UserReview',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('updated_at', models.DateTimeField(auto_now=True)),
                 ('is_active', models.BooleanField(default=True)),
                 ('review_text', models.TextField()),
-                ('star_rating', models.PositiveIntegerField(validators=[django.core.validators.MinValueValidator(1), django.core.validators.MaxValueValidator(5)])),
-                ('product', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='user_reviews', to='trendico.product')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                ('star_rating', models.PositiveIntegerField(validators=[
+                 django.core.validators.MinValueValidator(1), django.core.validators.MaxValueValidator(5)])),
+                ('product', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE,
+                 related_name='user_reviews', to='trendico.product')),
+                ('user', models.ForeignKey(
+                    on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
             options={
                 'abstract': False,
@@ -34,13 +38,16 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='TopSellingProduct',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('updated_at', models.DateTimeField(auto_now=True)),
                 ('is_active', models.BooleanField(default=True)),
-                ('total_revenue', models.DecimalField(decimal_places=2, default=Decimal('0'), max_digits=10)),
+                ('total_revenue', models.DecimalField(
+                    decimal_places=2, default=Decimal('0'), max_digits=10)),
                 ('sales_count', models.PositiveIntegerField(default=0)),
-                ('product', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='top_selling_products', to='trendico.product')),
+                ('product', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE,
+                 related_name='top_selling_products', to='trendico.product')),
             ],
             options={
                 'abstract': False,

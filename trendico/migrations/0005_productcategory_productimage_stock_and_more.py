@@ -14,7 +14,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='ProductCategory',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=50)),
                 ('description', models.TextField()),
             ],
@@ -22,7 +23,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='ProductImage',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('updated_at', models.DateTimeField(auto_now=True)),
                 ('is_active', models.BooleanField(default=True)),
@@ -35,7 +37,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Stock',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
                 ('quantity', models.IntegerField()),
                 ('timestamp', models.DateTimeField(auto_now_add=True)),
                 ('event_type', models.CharField(max_length=20)),
@@ -67,16 +70,19 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='stock',
             name='product',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='stock', to='trendico.product'),
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, related_name='stock', to='trendico.product'),
         ),
         migrations.AddField(
             model_name='productimage',
             name='product',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='images', to='trendico.product'),
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, related_name='images', to='trendico.product'),
         ),
         migrations.AlterField(
             model_name='product',
             name='category',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='trendico.productcategory'),
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to='trendico.productcategory'),
         ),
     ]
