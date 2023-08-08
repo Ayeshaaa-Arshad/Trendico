@@ -54,15 +54,15 @@ class Product(BaseModel):
 
     @property
     def average_rating(self):
-        if self.reviews.exists():
-            return self.reviews.aggregate(models.Avg('star_rating'))['star_rating__avg']
+        if self.user_reviews.exists():
+            return self.user_reviews.aggregate(models.Avg('star_rating'))['star_rating__avg']
         return 0
 
     @property
     def is_top_seller(self):
         try:
             top_selling_product = TopSellingProduct.objects.get(product=self)
-            return top_selling_product.sales_count >= 50 and self.average_rating >= 4.5
+            return top_selling_product.sales_count >= 5 and self.average_rating >= 3
         except TopSellingProduct.DoesNotExist:
             return False
 
@@ -95,15 +95,20 @@ class ProductImage(BaseModel):
         return f"Image for {self.product.name}"
 
 
+class EventType(models.Model):
+    name = models.CharField(max_length=20, unique=True)
+
+    def __str__(self):
+        return self.name
+
+
 class Stock(models.Model):
     product = models.ForeignKey(
         Product, related_name='stocks', on_delete=models.CASCADE)
     quantity = models.IntegerField()
     timestamp = models.DateTimeField(auto_now_add=True)
-    event_type = models.CharField(max_length=20)
-
-    def __str__(self):
-        return f"{self.product.name} - {self.event_type} - {self.timestamp}"
+    event_type = models.ForeignKey(
+        EventType, related_name='stock_events', on_delete=models.CASCADE)
 
 
 class UserReview(BaseModel):
@@ -129,14 +134,30 @@ class TopSellingProduct(BaseModel):
 
 @receiver(post_save, sender=Stock)
 def update_top_selling_product_stats(sender, instance, **kwargs):
-    if instance.event_type == 'sale':
+    if instance.event_type.name.lower() == 'sale':
         top_selling_product, created = TopSellingProduct.objects.get_or_create(
             product=instance.product)
+
         top_selling_product.sales_count += instance.quantity
         top_selling_product.total_revenue += Decimal(
-            instance.product.price) * instance.quantity
+            instance.product.price) * Decimal(instance.quantity)
         top_selling_product.save()
 
         if instance.product.is_top_seller:
             top_selling_product.is_top_seller = True
             top_selling_product.save()
+    elif instance.event_type.name.lower() == 'refund':
+        try:
+            top_selling_product = TopSellingProduct.objects.get(
+                product=instance.product)
+            if top_selling_product.sales_count >= instance.quantity:
+                top_selling_product.sales_count -= instance.quantity
+                top_selling_product.total_revenue -= Decimal(
+                    instance.product.price) * Decimal(instance.quantity)
+                top_selling_product.save()
+
+                if not instance.product.is_top_seller:
+                    top_selling_product.is_top_seller = False
+                    top_selling_product.save()
+        except TopSellingProduct.DoesNotExist:
+            pass
