@@ -1,13 +1,13 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.views import View
 from django.core.paginator import Paginator
-from django.db.models import Sum
-from trendico.models import Product, ProductCategory
+from trendico.models import Product, ProductCategory, Cart, CartItem
 from trendico.forms import SignUpForm
 from django.http import JsonResponse
-import json
+
 # Create your views here.
 
 
@@ -19,9 +19,6 @@ class HomeView(View):
         if category:
             products = Product.get_specific_products(category)
 
-        products = products.annotate(
-            remaining_quantity=Sum('stocks__quantity')
-        )
         context = {
             'categories': categories,
             'Products': products,
@@ -33,10 +30,6 @@ class HomeView(View):
 class ProductsByCategoryView(View):
     def get(self, request, category):
         products = Product.get_specific_products(category)
-
-        products = products.annotate(
-            remaining_quantity=Sum('stocks__quantity')
-        )
 
         products_data = []
         for product in products:
@@ -62,9 +55,6 @@ class StoreView(View):
         products = Product.get_specific_products(name)
 
         if products:
-            products = products.annotate(
-                remaining_quantity=Sum('stocks__quantity')
-            )
             request.session['selected_category'] = name
             paginator = Paginator(products, 6)
             page_number = request.GET.get('page')
@@ -74,8 +64,16 @@ class StoreView(View):
         return redirect('home')
 
 
-def product(request):
-    return render(request, 'product.html')
+class ProductView(View):
+    template_name = 'product.html'
+
+    def get(self, request, name):
+        try:
+            product = Product.objects.get(name=name)
+            context = {'product': product}
+            return render(request, self.template_name, context)
+        except Product.DoesNotExist:
+            return redirect('home')
 
 
 def checkout(request):
@@ -123,3 +121,55 @@ class RegisterView(View):
     def get(self, request):
         form = SignUpForm()
         return render(request, self.template_name, {'form': form})
+
+
+class AddToCartView(LoginRequiredMixin, View):
+    login_url = 'login.html'
+
+    def post(self, request, *args, **kwargs):
+        product_id = request.POST.get('product_id')
+        quantity = int(request.POST.get('quantity', 1))
+
+        product = Product.objects.get(pk=product_id)
+
+        cart, _ = Cart.objects.get_or_create(user=request.user)
+
+        cart_item, _ = CartItem.objects.get_or_create(
+            cart=cart, product=product)
+        cart_item.quantity += quantity
+        cart_item.save()
+
+        messages.success(
+            request, f"{quantity} {product.name}(s) added to your cart.")
+        return redirect('home')
+
+    def handle_no_permission(self):
+        messages.error(self.request, "You need to log in to access this page.")
+        return redirect('login')
+
+
+class RemoveFromCartView(LoginRequiredMixin, View):
+    def post(self, request, cart_item_id):
+        try:
+            cart_item = CartItem.objects.get(
+                id=cart_item_id, cart__user=request.user)
+            cart_item.delete()
+            cart_item_count = CartItem.objects.filter(
+                cart__user=request.user).count()
+            return JsonResponse({'success': True, 'cart_item_count': cart_item_count})
+        except CartItem.DoesNotExist:
+            return JsonResponse({'success': False})
+
+    def handle_no_permission(self):
+        messages.error(self.request, "You need to log in to access this page.")
+        return redirect('login')
+
+
+def cart_summary(request):
+    if request.user.is_authenticated:
+        cart = Cart.objects.filter(user=request.user).first()
+        if cart:
+            cart_item_count = cart.cart_items.count()
+            cart_total = cart.calculate_total()
+            return JsonResponse({'cart_item_count': cart_item_count, 'cart_total': cart_total})
+    return JsonResponse({'cart_item_count': 0, 'cart_total': 0})

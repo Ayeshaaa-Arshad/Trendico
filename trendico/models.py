@@ -2,6 +2,7 @@ from datetime import datetime, timedelta
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from decimal import Decimal
+from django.db.models import Sum, Case, When, F
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.contrib.auth.models import User
@@ -65,6 +66,27 @@ class Product(BaseModel):
             return top_selling_product.sales_count >= 5 and self.average_rating >= 3
         except TopSellingProduct.DoesNotExist:
             return False
+
+    @property
+    def remaining_quantity(self):
+        stock_info = self.stocks.aggregate(
+            total_purchase=Sum(Case(
+                When(event_type__name__iexact='purchase', then=F('quantity')), default=0,
+                output_field=models.IntegerField())),
+            total_sale=Sum(Case(
+                When(event_type__name__iexact='sale', then=F('quantity')), default=0,
+                output_field=models.IntegerField())),
+            total_refund=Sum(Case(
+                When(event_type__name__iexact='refund', then=F('quantity')), default=0,
+                output_field=models.IntegerField()))
+        )
+
+        total_purchase = stock_info['total_purchase'] or 0
+        total_sale = stock_info['total_sale'] or 0
+        total_refund = stock_info['total_refund'] or 0
+
+        total_stock = self.initial_quantity + total_purchase - total_sale + total_refund
+        return total_stock
 
     @classmethod
     def get_specific_products(cls, category):
@@ -161,3 +183,23 @@ def update_top_selling_product_stats(sender, instance, **kwargs):
                     top_selling_product.save()
         except TopSellingProduct.DoesNotExist:
             pass
+
+
+class Cart(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    products = models.ManyToManyField(
+        Product, through='CartItem', related_name='carts')
+
+    def calculate_total(self):
+        total = 0
+        for cart_item in self.cart_items.all():
+            total += cart_item.product.price * cart_item.quantity
+        return total
+
+
+class CartItem(models.Model):
+    cart = models.ForeignKey(
+        Cart, on_delete=models.CASCADE, related_name='cart_items')
+    product = models.ForeignKey(
+        Product, on_delete=models.CASCADE, related_name='cart_items')
+    quantity = models.PositiveIntegerField(default=1)

@@ -115,17 +115,21 @@
                     </div>
 
                     <div class="add-to-cart">
-                        <div class="qty-label">
-                            Qty
-                            <div class="input-number">
-                                <input type="number">
-                                <span class="qty-up">+</span>
-                                <span class="qty-down">-</span>
+                        <form id="cartForm_{{ product.id }}" method="post" action="{% url 'add_to_cart' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="product_id" value="{{ product.id }}">
+                            <div class="qty-label">
+                                Qty
+                                <div class="input-number">
+                                    <input type="number" name="quantity" min="1" max="{{ product.remaining_quantity }}"
+                                           value="1">
+                                </div>
                             </div>
-                        </div>
-                        <button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
+                            <button class="add-to-cart-btn" type="submit"><i class="fa fa-shopping-cart"></i> Add to
+                                Cart
+                            </button>
+                        </form>
                     </div>
-
                     <ul class="product-btns">
                         <li><a href="#"><i class="fa fa-heart-o"></i> add to wishlist</a></li>
                         <li><a href="#"><i class="fa fa-exchange"></i> add to compare</a></li>
