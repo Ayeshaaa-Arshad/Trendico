@@ -123,10 +123,17 @@ class RegisterView(View):
         return render(request, self.template_name, {'form': form})
 
 
-class AddToCartView(LoginRequiredMixin, View):
+class CartView(LoginRequiredMixin, View):
     login_url = 'login.html'
 
-    def post(self, request, *args, **kwargs):
+    def get(self, request):
+        cart = Cart.objects.filter(user=request.user).first()
+        if cart:
+            cart_item_count = cart.cart_items.count()
+            return JsonResponse({'cart_item_count': cart_item_count, 'cart_total': cart.cart_total})
+        return JsonResponse({'cart_item_count': 0, 'cart_total': 0})
+
+    def post(self, request):
         product_id = request.POST.get('product_id')
         quantity = int(request.POST.get('quantity', 1))
 
@@ -164,19 +171,6 @@ class RemoveFromCartView(LoginRequiredMixin, View):
             return JsonResponse({'success': True, 'cart_item_count': cart_item_count})
         except CartItem.DoesNotExist:
             return JsonResponse({'success': False})
-
-    def handle_no_permission(self):
-        messages.error(self.request, "You need to log in to access this page.")
-        return redirect('login')
-
-
-class CartSummaryView(LoginRequiredMixin, View):
-    def get(self, request):
-        cart = Cart.objects.filter(user=request.user).first()
-        if cart:
-            cart_item_count = cart.cart_items.count()
-            return JsonResponse({'cart_item_count': cart_item_count, 'cart_total': cart.cart_total})
-        return JsonResponse({'cart_item_count': 0, 'cart_total': 0})
 
     def handle_no_permission(self):
         messages.error(self.request, "You need to log in to access this page.")
