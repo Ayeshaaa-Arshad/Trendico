@@ -116,7 +116,7 @@
                                     </div>
                                     <div class="product-body">
                                         <p class="product-category">{{product.category.name}}</p>
-                                        <h3 class="product-name"><a href="#">{{product.name}}</a></h3>
+                                        <h3 class="product-name"><a href="{% url 'product' product.name%}">{{product.name}}</a></h3>
                                         {%if product.discount_price%}
                                         <h4 class="product-price">${{product.discount_price}}
                                             <del class="product-old-price">${{product.price}}</del>
@@ -125,19 +125,19 @@
                                         <h4 class="product-price">${{product.price}} </h4>
                                         {%endif%}
 
-                                    <div class="product-rating">
-                                        {% with avg_rating=product.average_rating %}
-                                            {% if avg_rating %}
-                                                {% for _ in "x"|ljust:5 %}
-                                                    {% if forloop.counter0 < avg_rating %}
-                                                        <i class="fa fa-star"></i>
-                                                    {% else %}
-                                                        <i class="fa fa-star-o"></i>
-                                                    {% endif %}
-                                                {% endfor %}
-                                            {% endif %}
-                                        {% endwith %}
-                                    </div>
+                                        <div class="product-rating">
+                                            {% with avg_rating=product.average_rating %}
+                                                {% if avg_rating %}
+                                                    {% for _ in "x"|ljust:5 %}
+                                                        {% if forloop.counter0 < avg_rating %}
+                                                            <i class="fa fa-star"></i>
+                                                        {% else %}
+                                                            <i class="fa fa-star-o"></i>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                {% endif %}
+                                            {% endwith %}
+                                        </div>
 
                                         <div class="product-btns">
                                             <button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span
@@ -149,7 +149,7 @@
                                         </div>
                                     </div>
                                     <div class="add-to-cart">
-                                        <a href="{%url 'product'%}"></a>
+                                        <a href="{%url 'product' product.name%}"></a>
                                         <button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart
                                         </button>
                                         </a>
@@ -300,7 +300,7 @@
                                         </div>
                                     </div>
                                     <div class="add-to-cart">
-                                        <a href="{%url 'product'%}"></a>
+                                        <a href="#"></a>
                                         <button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart
                                         </button>
                                         </a>
