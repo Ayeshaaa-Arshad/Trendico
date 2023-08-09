@@ -97,12 +97,12 @@
 								</div>
 								<!-- /Wishlist -->
 
-								 <!-- Cart -->
+								  <!-- Cart -->
 									<div class="dropdown">
 										<a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
 											<i class="fa fa-shopping-cart"></i>
 											<span>Your Cart</span>
-											<div class="qty">{{ cart_item_count }}</div>
+											<div class="qty cart-qty">{{ cart_item_count }}</div>
 										</a>
 										<div class="cart-dropdown">
 											<div class="cart-list">
@@ -127,10 +127,10 @@
 												<small>{{ cart_item_count }} Item(s) selected</small>
 												<h5>SUBTOTAL: ${{ cart_total }}</h5>
 											</div>
-											<div class="cart-btns">
-												<a href="#">Clear All</a>
-												<a href="{% url 'checkout' %}">Checkout  <i class="fa fa-arrow-circle-right"></i></a>
-											</div>
+									<div class="cart-btns">
+										<a href="#" id="clearAllBtn">Clear All</a>
+										<a href="{% url 'checkout' %}" id="checkoutBtn">Checkout <i class="fa fa-arrow-circle-right"></i></a>
+									</div>
 										</div>
 									</div>
 								  <!-- /Cart -->

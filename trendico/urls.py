@@ -12,7 +12,7 @@ urlpatterns = [
     path('logout/', views.LogoutView.as_view(), name="logout"),
     path('register/', views.RegisterView.as_view(), name="register"),
     path('add_to_cart/', views.AddToCartView.as_view(), name="add_to_cart"),
-    path('cart_summary/', views.cart_summary, name='cart_summary'),
+    path('cart_summary/', views.CartSummaryView.as_view(), name='cart_summary'),
     path('remove_from_cart/<int:cart_item_id>/',
          views.RemoveFromCartView.as_view(), name='remove_from_cart'),
 ]

@@ -190,7 +190,8 @@ class Cart(models.Model):
     products = models.ManyToManyField(
         Product, through='CartItem', related_name='carts')
 
-    def calculate_total(self):
+    @property
+    def cart_total(self):
         total = 0
         for cart_item in self.cart_items.all():
             total += cart_item.product.price * cart_item.quantity

@@ -134,10 +134,15 @@ class AddToCartView(LoginRequiredMixin, View):
 
         cart, _ = Cart.objects.get_or_create(user=request.user)
 
-        cart_item, _ = CartItem.objects.get_or_create(
+        cart_item, created = CartItem.objects.get_or_create(
             cart=cart, product=product)
-        cart_item.quantity += quantity
-        cart_item.save()
+
+        if not created:
+            cart_item.quantity += quantity
+            cart_item.save()
+        else:
+            cart_item.quantity = quantity
+            cart_item.save()
 
         messages.success(
             request, f"{quantity} {product.name}(s) added to your cart.")
@@ -165,11 +170,14 @@ class RemoveFromCartView(LoginRequiredMixin, View):
         return redirect('login')
 
 
-def cart_summary(request):
-    if request.user.is_authenticated:
+class CartSummaryView(LoginRequiredMixin, View):
+    def get(self, request):
         cart = Cart.objects.filter(user=request.user).first()
         if cart:
             cart_item_count = cart.cart_items.count()
-            cart_total = cart.calculate_total()
-            return JsonResponse({'cart_item_count': cart_item_count, 'cart_total': cart_total})
-    return JsonResponse({'cart_item_count': 0, 'cart_total': 0})
+            return JsonResponse({'cart_item_count': cart_item_count, 'cart_total': cart.cart_total})
+        return JsonResponse({'cart_item_count': 0, 'cart_total': 0})
+
+    def handle_no_permission(self):
+        messages.error(self.request, "You need to log in to access this page.")
+        return redirect('login')
