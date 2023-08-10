@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.views import View
 from django.core.paginator import Paginator
-from trendico.models import Product, ProductCategory, Cart, CartItem
+from trendico.models import Product, ProductCategory, Cart, CartItem, Wishlist
 from trendico.forms import SignUpForm
 from django.http import JsonResponse
 
@@ -175,3 +175,45 @@ class RemoveFromCartView(LoginRequiredMixin, View):
     def handle_no_permission(self):
         messages.error(self.request, "You need to log in to access this page.")
         return redirect('login')
+
+
+class AddToWishlistView(LoginRequiredMixin, View):
+    def post(self, request, product_id):
+        try:
+            product = Product.objects.get(pk=product_id)
+        except Product.DoesNotExist:
+            return JsonResponse({'error': 'Product not found'}, status=400)
+
+        wishlist, _ = Wishlist.objects.get_or_create(user=request.user)
+        wishlist.items.add(product)
+
+        messages.success(request, f"{product.name}(s) added to your wishlist.")
+
+        wishlist_item_count = wishlist.items.count()
+
+        return JsonResponse({
+            'success': True,
+            'message': f"{product.name}(s) added to your wishlist.",
+            'wishlist_item_count': wishlist_item_count,
+        })
+
+
+class RemoveFromWishlistView(LoginRequiredMixin, View):
+    def post(self, request, wishlist_item_id):
+        try:
+            wishlist = Wishlist.objects.get(user=request.user)
+            product = wishlist.items.get(pk=wishlist_item_id)
+            wishlist.items.remove(product)
+
+            message = f"{product.name}(s) removed from your wishlist."
+            success = True
+        except Wishlist.DoesNotExist:
+            message = "Wishlist not found."
+            success = False
+        except Product.DoesNotExist:
+            message = "Product not found in wishlist."
+            success = False
+
+        wishlist_item_count = wishlist.items.count()  # Get updated wishlist item count
+
+        return JsonResponse({'success': success, 'message': message, 'wishlist_item_count': wishlist_item_count})
