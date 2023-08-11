@@ -24,11 +24,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 const jsonResponse = await response.json();
                 if (jsonResponse.success) {
                     console.log(jsonResponse.message);
-
-                    // Remove the item from the UI
                     form.parentElement.remove();
 
-                    // Update the wishlist count
                     const wishlistCountElement = document.querySelector('.qty');
                     wishlistCountElement.textContent = jsonResponse.wishlist_item_count;
                 } else {
@@ -52,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log('Product ID:', productId);
 
             try {
-                const response = await fetch(`/add_to_wishlist/${productId}`, {
+                const response = await fetch(`/wishlist/${productId}`, {
                     method: 'POST',
                     headers: {
                         'X-Requested-With': 'XMLHttpRequest',

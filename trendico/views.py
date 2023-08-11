@@ -177,7 +177,7 @@ class RemoveFromCartView(LoginRequiredMixin, View):
         return redirect('login')
 
 
-class AddToWishlistView(LoginRequiredMixin, View):
+class WishlistView(LoginRequiredMixin, View):
     def post(self, request, product_id):
         try:
             product = Product.objects.get(pk=product_id)
@@ -214,6 +214,24 @@ class RemoveFromWishlistView(LoginRequiredMixin, View):
             message = "Product not found in wishlist."
             success = False
 
-        wishlist_item_count = wishlist.items.count()  # Get updated wishlist item count
+        wishlist_item_count = wishlist.items.count()
 
         return JsonResponse({'success': success, 'message': message, 'wishlist_item_count': wishlist_item_count})
+
+    def get(self, request):
+        wishlist = Wishlist.objects.get_or_create(user=request.user)[0]
+        wishlist_items = wishlist.items.all()
+
+        wishlist_data = []
+        for item in wishlist_items:
+            wishlist_data.append({
+                'id': item.id,
+                'name': item.name,
+                'price': item.price,
+                'image_url': item.images.first().image.url,
+            })
+
+        return JsonResponse({
+            'wishlist_item_count': wishlist_items.count(),
+            'wishlist_items': wishlist_data,
+        })
