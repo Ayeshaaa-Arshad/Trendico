@@ -212,3 +212,28 @@ class Wishlist(models.Model):
 
     def __str__(self):
         return f'Wishlist of {self.user.username}'
+
+
+class Order(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    products = models.ManyToManyField(Product,related_name='orders')
+    created_at = models.DateTimeField(auto_now_add=True)
+    billing_first_name = models.CharField(max_length=100)
+    billing_last_name = models.CharField(max_length=100)
+    billing_email = models.EmailField()
+    billing_address = models.TextField()
+    billing_city = models.CharField(max_length=100)
+    billing_country = models.CharField(max_length=100)
+    billing_zip_code = models.CharField(max_length=10)
+    billing_tel = models.CharField(max_length=15)
+    ship_to_different_address = models.BooleanField(default=False)
+    shipping_first_name = models.CharField(max_length=100, blank=True, null=True)
+    shipping_last_name = models.CharField(max_length=100, blank=True, null=True)
+    shipping_email = models.EmailField(blank=True, null=True)
+    shipping_address = models.TextField(blank=True, null=True)
+    shipping_city = models.CharField(max_length=100, blank=True, null=True)
+    shipping_country = models.CharField(max_length=100, blank=True, null=True)
+    shipping_zip_code = models.CharField(max_length=10, blank=True, null=True)
+    shipping_tel = models.CharField(max_length=15, blank=True, null=True)
+    order_notes = models.TextField(blank=True, null=True)
+

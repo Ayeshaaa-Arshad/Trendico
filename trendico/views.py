@@ -4,8 +4,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.views import View
 from django.core.paginator import Paginator
-from trendico.models import Product, ProductCategory, Cart, CartItem, Wishlist
-from trendico.forms import SignUpForm
+from trendico.models import Product, ProductCategory, Cart, CartItem, Wishlist, Order
+from trendico.forms import SignUpForm, OrderForm
 from django.http import JsonResponse
 
 # Create your views here.
@@ -74,10 +74,6 @@ class ProductView(View):
             return render(request, self.template_name, context)
         except Product.DoesNotExist:
             return redirect('home')
-
-
-def checkout(request):
-    return render(request, 'checkout.html')
 
 
 class LoginView(View):
@@ -235,3 +231,28 @@ class RemoveFromWishlistView(LoginRequiredMixin, View):
             'wishlist_item_count': wishlist_items.count(),
             'wishlist_items': wishlist_data,
         })
+
+
+class CheckoutView(View):
+    template_name = 'checkout.html'
+
+    def get(self, request, *args, **kwargs):
+        form = OrderForm()
+        context = {'form': form}
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        form = OrderForm(request.POST)
+        if form.is_valid():
+            order = form.save(commit=False)
+            order.user = request.user
+            order.save()
+
+            cart = Cart.objects.get(user=request.user)
+            order.products.set(cart.products.all())
+            cart.products.clear()
+
+            order.save()
+            return redirect('home')
+        context = {'form': form}
+        return render(request, self.template_name, context)
