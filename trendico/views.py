@@ -238,7 +238,14 @@ class CheckoutView(View):
 
     def get(self, request, *args, **kwargs):
         form = OrderForm()
-        context = {'form': form}
+        cart = Cart.objects.get(user=request.user)
+        item_totals = [cart_item.quantity * cart_item.product.price for cart_item in cart.cart_items.all()]
+        context = {
+            'form': form,
+            'cart_items': cart.cart_items.all(),
+            'cart': cart,
+            'item_totals': item_totals,
+        }
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
@@ -246,13 +253,56 @@ class CheckoutView(View):
         if form.is_valid():
             order = form.save(commit=False)
             order.user = request.user
-            order.save()
+            order.save()  # Save the order first
 
             cart = Cart.objects.get(user=request.user)
-            order.products.set(cart.products.all())
-            cart.products.clear()
+            selected_item_ids = request.POST.getlist('selected_items')
 
-            order.save()
-            return redirect('home')
-        context = {'form': form}
+            if selected_item_ids:
+                selected_cart_items = cart.cart_items.filter(id__in=selected_item_ids)
+
+                selected_product_ids = [item.product.id for item in selected_cart_items]
+
+                order.products.set(selected_product_ids)
+
+                for item in selected_cart_items:
+                    item.delete()
+
+                order.save()
+                messages.success(request, "Your Order is placed ")
+                return redirect('home')
+
+        cart = Cart.objects.get(user=request.user)
+        item_totals = [cart_item.quantity * cart_item.product.price for cart_item in cart.cart_items.all()]
+        context = {
+            'form': form,
+            'cart_items': cart.cart_items.all(),
+            'cart': cart,
+            'item_totals': item_totals,
+        }
         return render(request, self.template_name, context)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

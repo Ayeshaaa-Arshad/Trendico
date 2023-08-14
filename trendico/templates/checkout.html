@@ -154,25 +154,31 @@
                             <div><strong>PRODUCT</strong></div>
                             <div><strong>TOTAL</strong></div>
                         </div>
+                        {% for cart_item in cart_items %}
                         <div class="order-products">
                             <div class="order-col">
-                                <div>1x Product Name Goes Here</div>
-                                <div>$980.00</div>
-                            </div>
-                            <div class="order-col">
-                                <div>2x Product Name Goes Here</div>
-                                <div>$980.00</div>
-                            </div>
+                        <label>
+
+                          <input type="checkbox" name="selected_items" class="item-checkbox" data-cartitemid="{{ cart_item.id }}" data-quantity="{{ cart_item.quantity }}" data-price="{{ cart_item.product.price }}" value="{{ cart_item.id }}">
+                            {{ cart_item.quantity }} x {{ cart_item.product.name }}
+                        </label>
+                   <div class="order-col">
+                        <span class="item-total">${{ item_totals.forloop.counter0|floatformat:2 }}</span>
+
                         </div>
+                            </div>
+
+                        {%endfor%}
                         <div class="order-col">
                             <div>Shiping</div>
                             <div><strong>FREE</strong></div>
                         </div>
                         <div class="order-col">
                             <div><strong>TOTAL</strong></div>
-                            <div><strong class="order-total">$2940.00</strong></div>
+                            <div><strong class="order-total">$0.00</strong></div>
                         </div>
                     </div>
+
                     <div class="payment-method">
                         <div class="input-radio">
                             <input type="radio" name="payment" id="payment-1">
