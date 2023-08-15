@@ -16,7 +16,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Order',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('billing_first_name', models.CharField(max_length=100)),
                 ('billing_last_name', models.CharField(max_length=100)),
@@ -27,17 +28,26 @@ class Migration(migrations.Migration):
                 ('billing_zip_code', models.CharField(max_length=10)),
                 ('billing_tel', models.CharField(max_length=15)),
                 ('ship_to_different_address', models.BooleanField(default=False)),
-                ('shipping_first_name', models.CharField(blank=True, max_length=100, null=True)),
-                ('shipping_last_name', models.CharField(blank=True, max_length=100, null=True)),
-                ('shipping_email', models.EmailField(blank=True, max_length=254, null=True)),
+                ('shipping_first_name', models.CharField(
+                    blank=True, max_length=100, null=True)),
+                ('shipping_last_name', models.CharField(
+                    blank=True, max_length=100, null=True)),
+                ('shipping_email', models.EmailField(
+                    blank=True, max_length=254, null=True)),
                 ('shipping_address', models.TextField(blank=True, null=True)),
-                ('shipping_city', models.CharField(blank=True, max_length=100, null=True)),
-                ('shipping_country', models.CharField(blank=True, max_length=100, null=True)),
-                ('shipping_zip_code', models.CharField(blank=True, max_length=10, null=True)),
-                ('shipping_tel', models.CharField(blank=True, max_length=15, null=True)),
+                ('shipping_city', models.CharField(
+                    blank=True, max_length=100, null=True)),
+                ('shipping_country', models.CharField(
+                    blank=True, max_length=100, null=True)),
+                ('shipping_zip_code', models.CharField(
+                    blank=True, max_length=10, null=True)),
+                ('shipping_tel', models.CharField(
+                    blank=True, max_length=15, null=True)),
                 ('order_notes', models.TextField(blank=True, null=True)),
-                ('products', models.ManyToManyField(related_name='orders', to='trendico.product')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                ('products', models.ManyToManyField(
+                    related_name='orders', to='trendico.product')),
+                ('user', models.ForeignKey(
+                    on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
         ),
     ]

@@ -4,13 +4,12 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.views import View
 from django.core.paginator import Paginator
-from trendico.models import Product, ProductCategory, Cart, CartItem, Wishlist, Order
+from trendico.models import Product, ProductCategory, Cart, CartItem, Wishlist
 from trendico.forms import SignUpForm, OrderForm
 from django.http import JsonResponse
+from trendico.tasks import send_order_notification_email
 
 # Create your views here.
-
-
 class HomeView(View):
     def get(self, request, category=None):
         categories = ProductCategory.objects.all()
@@ -253,7 +252,7 @@ class CheckoutView(View):
         if form.is_valid():
             order = form.save(commit=False)
             order.user = request.user
-            order.save()  # Save the order first
+            order.save()
 
             cart = Cart.objects.get(user=request.user)
             selected_item_ids = request.POST.getlist('selected_items')
@@ -261,14 +260,14 @@ class CheckoutView(View):
             if selected_item_ids:
                 selected_cart_items = cart.cart_items.filter(id__in=selected_item_ids)
 
-                selected_product_ids = [item.product.id for item in selected_cart_items]
+                order.products.set([item.product.id for item in selected_cart_items])
 
-                order.products.set(selected_product_ids)
-
-                for item in selected_cart_items:
-                    item.delete()
+                selected_cart_items.delete()
 
                 order.save()
+
+                send_order_notification_email.delay(order.id)
+                print(order.id)
                 messages.success(request, "Your Order is placed ")
                 return redirect('home')
 
@@ -281,28 +280,3 @@ class CheckoutView(View):
             'item_totals': item_totals,
         }
         return render(request, self.template_name, context)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
