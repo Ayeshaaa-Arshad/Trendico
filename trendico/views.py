@@ -267,7 +267,7 @@ class CheckoutView(View):
                 order.save()
 
                 send_order_notification_email.delay(order.id)
-                print(order.id)
+
                 messages.success(request, "Your Order is placed ")
                 return redirect('home')
 
