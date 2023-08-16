@@ -10,6 +10,8 @@ __pycache__/
 .idea/
 #ignoring media direcory
 media/
+#ignoring .env
+.env
 # Distribution / packaging
 .Python
 build/

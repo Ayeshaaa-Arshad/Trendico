@@ -5,12 +5,11 @@ from django.contrib import messages
 from django.views import View
 from django.core.paginator import Paginator
 from trendico.models import Product, ProductCategory, Cart, CartItem, Wishlist
-from trendico.forms import SignUpForm
+from trendico.forms import SignUpForm, OrderForm
 from django.http import JsonResponse
+from trendico.tasks import send_order_notification_email
 
 # Create your views here.
-
-
 class HomeView(View):
     def get(self, request, category=None):
         categories = ProductCategory.objects.all()
@@ -74,10 +73,6 @@ class ProductView(View):
             return render(request, self.template_name, context)
         except Product.DoesNotExist:
             return redirect('home')
-
-
-def checkout(request):
-    return render(request, 'checkout.html')
 
 
 class LoginView(View):
@@ -235,3 +230,53 @@ class RemoveFromWishlistView(LoginRequiredMixin, View):
             'wishlist_item_count': wishlist_items.count(),
             'wishlist_items': wishlist_data,
         })
+
+
+class CheckoutView(View):
+    template_name = 'checkout.html'
+
+    def get(self, request, *args, **kwargs):
+        form = OrderForm()
+        cart = Cart.objects.get(user=request.user)
+        item_totals = [cart_item.quantity * cart_item.product.price for cart_item in cart.cart_items.all()]
+        context = {
+            'form': form,
+            'cart_items': cart.cart_items.all(),
+            'cart': cart,
+            'item_totals': item_totals,
+        }
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        form = OrderForm(request.POST)
+        if form.is_valid():
+            order = form.save(commit=False)
+            order.user = request.user
+            order.save()
+
+            cart = Cart.objects.get(user=request.user)
+            selected_item_ids = request.POST.getlist('selected_items')
+
+            if selected_item_ids:
+                selected_cart_items = cart.cart_items.filter(id__in=selected_item_ids)
+
+                order.products.set([item.product.id for item in selected_cart_items])
+
+                selected_cart_items.delete()
+
+                order.save()
+
+                send_order_notification_email.delay(order.id)
+
+                messages.success(request, "Your Order is placed ")
+                return redirect('home')
+
+        cart = Cart.objects.get(user=request.user)
+        item_totals = [cart_item.quantity * cart_item.product.price for cart_item in cart.cart_items.all()]
+        context = {
+            'form': form,
+            'cart_items': cart.cart_items.all(),
+            'cart': cart,
+            'item_totals': item_totals,
+        }
+        return render(request, self.template_name, context)
