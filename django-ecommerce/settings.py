@@ -56,7 +56,7 @@ ROOT_URLCONF = 'django-ecommerce.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
+        'DIRS': [BASE_DIR / 'trendico/templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
