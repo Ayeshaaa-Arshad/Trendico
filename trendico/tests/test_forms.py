@@ -1,6 +1,7 @@
 from django.test import TestCase
 from trendico.forms import SignUpForm, OrderForm
 
+
 class SignUpFormTest(TestCase):
     def test_signup_form_valid_data(self):
         form = SignUpForm({
@@ -22,6 +23,8 @@ class SignUpFormTest(TestCase):
         })
         self.assertFalse(form.is_valid())
         self.assertEqual(len(form.errors), 5)
+
+
 class OrderFormTest(TestCase):
     def test_order_form_valid_data(self):
         form = OrderForm({
