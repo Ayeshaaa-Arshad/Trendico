@@ -10,6 +10,8 @@ from django.http import JsonResponse
 from trendico.tasks import send_order_notification_email
 
 # Create your views here.
+
+
 class HomeView(View):
     def get(self, request, category=None):
         categories = ProductCategory.objects.all()
@@ -238,7 +240,8 @@ class CheckoutView(View):
     def get(self, request, *args, **kwargs):
         form = OrderForm()
         cart = Cart.objects.get(user=request.user)
-        item_totals = [cart_item.quantity * cart_item.product.price for cart_item in cart.cart_items.all()]
+        item_totals = [cart_item.quantity *
+                       cart_item.product.price for cart_item in cart.cart_items.all()]
         context = {
             'form': form,
             'cart_items': cart.cart_items.all(),
@@ -258,9 +261,11 @@ class CheckoutView(View):
             selected_item_ids = request.POST.getlist('selected_items')
 
             if selected_item_ids:
-                selected_cart_items = cart.cart_items.filter(id__in=selected_item_ids)
+                selected_cart_items = cart.cart_items.filter(
+                    id__in=selected_item_ids)
 
-                order.products.set([item.product.id for item in selected_cart_items])
+                order.products.set(
+                    [item.product.id for item in selected_cart_items])
 
                 selected_cart_items.delete()
 
@@ -272,7 +277,8 @@ class CheckoutView(View):
                 return redirect('home')
 
         cart = Cart.objects.get(user=request.user)
-        item_totals = [cart_item.quantity * cart_item.product.price for cart_item in cart.cart_items.all()]
+        item_totals = [cart_item.quantity *
+                       cart_item.product.price for cart_item in cart.cart_items.all()]
         context = {
             'form': form,
             'cart_items': cart.cart_items.all(),
