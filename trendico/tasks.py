@@ -7,8 +7,7 @@ import smtplib
 
 @shared_task
 def send_order_notification_email(order_id):
-    admin_emails = list(User.objects.filter(
-        is_staff=True, is_superuser=True).values_list('email', flat=True))
+    admin_emails = list(User.objects.filter(is_staff=True, is_superuser=True).values_list('email', flat=True))
     subject = 'New Order Placed'
     message = f'An order with ID {order_id} has been placed.'
 
